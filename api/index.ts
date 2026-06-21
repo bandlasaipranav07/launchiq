@@ -44,6 +44,14 @@ function getAIClient(): GoogleGenAI | null {
   return aiClient;
 }
 
+app.get("/api/diagnose", (req, res) => {
+  res.json({
+    supabaseUrl: SUPABASE_URL,
+    supabaseConfigured: !!supabase,
+    geminiConfigured: !!process.env.GEMINI_API_KEY
+  });
+});
+
 // 1. Business Analysis AI Generation API
 app.post("/api/analyze", async (req, res) => {
   try {
