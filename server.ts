@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import dotenv from "dotenv";
 import { GoogleGenAI, Type } from "@google/genai";
-import { createServer as createViteServer } from "vite";
 import { createClient } from "@supabase/supabase-js";
 
 // Load environment variables
@@ -922,6 +921,7 @@ app.post("/api/logs", async (req, res) => {
 const startServer = async () => {
   if (process.env.NODE_ENV !== "production") {
     // Development server with Vite integration
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -941,6 +941,10 @@ const startServer = async () => {
   });
 };
 
-startServer().catch((err) => {
-  console.error("Failed to start LaunchIQ server:", err);
-});
+if (!process.env.VERCEL) {
+  startServer().catch((err) => {
+    console.error("Failed to start LaunchIQ server:", err);
+  });
+}
+
+export default app;
