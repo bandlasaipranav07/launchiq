@@ -96,6 +96,7 @@ export default function App() {
   
   // Selected resource pointers
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [selectedMentorProjectId, setSelectedMentorProjectId] = useState<string>("");
 
   // Admin and global statistics state
   const [stats, setStats] = useState<SystemStats>({
@@ -1053,6 +1054,11 @@ export default function App() {
                   onBack={() => setSelectedReport(null)}
                   isSavedMode={true}
                   onDelete={() => handleDeleteReport(selectedReport.id!)}
+                  onConsultMentor={(projId) => {
+                    setSelectedMentorProjectId(projId);
+                    setActiveView("mentor");
+                    setSelectedReport(null);
+                  }}
                 />
               ) : (
                 <div className="space-y-5">
@@ -1110,7 +1116,7 @@ export default function App() {
 
           {/* VIEW: MENTOR PANEL */}
           {activeView === "mentor" && (
-            <MentorPanel projects={projects} />
+            <MentorPanel projects={projects} initialProjectId={selectedMentorProjectId} />
           )}
 
           {/* VIEW: ADMIN HUB */}

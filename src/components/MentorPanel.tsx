@@ -22,6 +22,7 @@ interface Message {
 
 interface MentorPanelProps {
   projects: Project[];
+  initialProjectId?: string;
 }
 
 const PRESET_PROMPTS = [
@@ -31,8 +32,8 @@ const PRESET_PROMPTS = [
   { label: "Improve Pitch", text: "How can I articulate our value proposition to angel investors to sound highly compelling?", icon: Lightbulb }
 ];
 
-export default function MentorPanel({ projects }: MentorPanelProps) {
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(projects[0]?.id || "");
+export default function MentorPanel({ projects, initialProjectId }: MentorPanelProps) {
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(initialProjectId || projects[0]?.id || "");
   const currentProject = projects.find((p) => p.id === selectedProjectId) || null;
 
   const [messages, setMessages] = useState<Message[]>([
@@ -52,6 +53,28 @@ export default function MentorPanel({ projects }: MentorPanelProps) {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    if (initialProjectId) {
+      setSelectedProjectId(initialProjectId);
+      const targetProj = projects.find(p => p.id === initialProjectId);
+      if (targetProj) {
+        setMessages((prev) => {
+          const lastMsg = prev[prev.length - 1];
+          if (lastMsg && lastMsg.content.includes(targetProj.name)) return prev;
+          
+          return [
+            ...prev,
+            {
+              id: String(Date.now()),
+              role: "model",
+              content: `🔄 **Context Synced**: I have loaded your venture concept **"${targetProj.name}"** in the **${targetProj.industry}** industry. All subsequent growth suggestions, fundraising advice, and distribution models will be optimized precisely for this idea.`
+            }
+          ];
+        });
+      }
+    }
+  }, [initialProjectId, projects]);
 
   const handleSendMessage = async (text: string) => {
     if (!text.trim() || loading) return;

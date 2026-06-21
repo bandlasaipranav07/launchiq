@@ -43,9 +43,10 @@ interface ReportViewerProps {
   onBack: () => void;
   onDelete?: () => void;
   isSavedMode?: boolean;
+  onConsultMentor?: (projectId: string) => void;
 }
 
-export default function ReportViewer({ report, onBack, onDelete, isSavedMode = false }: ReportViewerProps) {
+export default function ReportViewer({ report, onBack, onDelete, isSavedMode = false, onConsultMentor }: ReportViewerProps) {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<"overview" | "market" | "swot" | "financials" | "roadmap">("overview");
 
@@ -379,6 +380,16 @@ export default function ReportViewer({ report, onBack, onDelete, isSavedMode = f
             <Download className="w-3.5 h-3.5" />
             <span>Export Report (PDF)</span>
           </button>
+
+          {onConsultMentor && report.projectId && (
+            <button 
+              onClick={() => onConsultMentor(report.projectId)}
+              className="flex items-center space-x-1.5 px-4 py-2 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white rounded-xl shadow-[2px_2px_5px_#07090f,-2px_-2px_5px_#1f253e] hover:shadow-[inset_2px_2px_5px_#07090f,inset_-2px_-2px_5px_#1f253e] transition text-xs font-black cursor-pointer animate-pulse"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-yellow-300 fill-yellow-300" />
+              <span>Consult AI Mentor</span>
+            </button>
+          )}
 
           {isSavedMode && onDelete && (
             <button 
