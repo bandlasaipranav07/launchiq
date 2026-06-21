@@ -1,0 +1,6 @@
+{
+  "name": "LaunchIQ",
+  "description": "Premium AI-powered Business Launch Advisor & Venture Validation SaaS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

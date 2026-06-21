@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-bg: #131625;
+  --color-brand-inset: #0b0e18;
+}
+
+/* Custom Neumorphic Styling for Dark Neumorphism */
+.bg-neu-base {
+  background-color: #131625;
+}
+
+/* Raised Panel */
+.neu-card {
+  background-color: #131625;
+  box-shadow: 6px 6px 16px #07090f, -6px -6px 16px #1f253e;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+/* Highly pronounced Raised Rounded Button */
+.neu-btn {
+  background-color: #131625;
+  box-shadow: 4px 4px 10px #07090f, -4px -4px 10px #1f253e;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.neu-btn:hover {
+  box-shadow: 2px 2px 5px #07090f, -2px -2px 5px #1f253e;
+  transform: translateY(0.5px);
+}
+.neu-btn:active, .neu-btn-active {
+  box-shadow: inset 4px 4px 8px #07090f, inset -4px -4px 8px #1f253e;
+  transform: translateY(1.5px);
+}
+
+/* Active or highlighted button (e.g. active tab) with a subtle glowing aura */
+.neu-btn-active-glow {
+  background-color: #161b2e;
+  box-shadow: inset 3px 3px 6px #06080d, inset -3px -3px 6px #242c4b, 0 0 12px rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+/* Recessed Inset Panel (For text area, input, logs terminal, inner details) */
+.neu-inset {
+  background-color: #0b0e18;
+  box-shadow: inset 5px 5px 12px #040509, inset -5px -5px 12px #14192a;
+}
+
+/* Deepest level wells (extremely sunken) */
+.neu-well {
+  background-color: #08090f;
+  box-shadow: inset 6px 6px 14px #020204, inset -6px -6px 14px #101422;
+}
+
+/* Premium Ambient Neon glow lines/circles replicating the Reflect mockup */
+.neon-glow-purple {
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
+}
+.neon-glow-cyan {
+  filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.6));
+}
+
+/* Ambient Radial backlighting */
+.radial-bg {
+  background: radial-gradient(circle at 50% -10%, rgba(139, 92, 246, 0.18) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 100%);
+}
+.radial-corner {
+  background: radial-gradient(circle at top right, rgba(168, 85, 247, 0.12) 0%, transparent 60%);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0e18;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f253e;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a855f7;
+}
+
+/* Print Optimization Stylesheet */
+@media print {
+  /* Hide interface overheads */
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  /* Show print-specific blocks sequentially */
+  .print\:block {
+    display: block !important;
+  }
+  
+  /* Reset background for readability and ink saving */
+  body, #root, .max-w-6xl {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Make containers light-themed for paper/PDF */
+  .bg-\[\#131625\], .bg-\[\#0b0e18\], .bg-neu-base, .neu-card, .neu-inset, .neu-well {
+    background: #f8fafc !important; /* safe white/slate color */
+    color: #0f172a !important;
+    border-color: #cbd5e1 !important;
+    box-shadow: none !important;
+  }
+
+  p, span, h1, h2, h3, h4, li, strong, div {
+    color: #0f172a !important;
+  }
+
+  .text-violet-400, .text-violet-300, .text-indigo-400, .text-cyan-400, .text-slate-200 {
+    color: #4f46e5 !important; /* Rich indigo/violet logo accent */
+  }
+
+  .text-slate-400, .text-slate-450, .text-slate-350, .text-slate-300 {
+    color: #334155 !important;
+  }
+
+  .border-white\/\[0\.02\], .border-white\/\[0\.01\], .border-white\/\[0\.03\] {
+    border-color: #cbd5e1 !important;
+  }
+
+  /* Page layout corrections to vertical stack */
+  .grid-cols-1, .grid-cols-2, .grid-cols-3, .sm\:grid-cols-2, .md\:grid-cols-2, .md\:grid-cols-3, .lg\:grid-cols-3 {
+    display: block !important;
+  }
+
+  /* Separate blocks cleanly */
+  .grid > *, .space-y-6 > * {
+    margin-bottom: 2rem !important;
+    page-break-inside: avoid;
+  }
+
+  .p-6, .p-8, .p-5, .p-4 {
+    padding: 1.5rem !important;
+  }
+
+  /* Ensure charts invert and render crisp on white paper */
+  svg {
+    filter: invert(0.9) contrast(1.1) hue-rotate(180deg) !important;
+  }
+}

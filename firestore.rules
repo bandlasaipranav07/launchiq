@@ -1,0 +1,71 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthed() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthed() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthed() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Users rules
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthed() && request.auth.uid == userId;
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Projects rules
+    match /projects/{projectId} {
+      allow read: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthed() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin()) && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Reports rules
+    match /reports/{reportId} {
+      allow read: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthed() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin()) && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Notifications rules
+    match /notifications/{notificationId} {
+      allow read: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthed(); // Allow system or other user actions to create
+      allow update: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow delete: if isAuthed() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // Activity Log rules
+    match /activityLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuthed() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    // System Stats rules
+    match /system/stats {
+      allow read: if isAuthed();
+      allow create, update: if isAuthed();
+      allow delete: if isAdmin();
+    }
+
+    match /system/{document=**} {
+      allow read: if isAuthed();
+      allow write: if isAdmin();
+    }
+  }
+}
