@@ -542,13 +542,15 @@ app.post("/api/mentor", async (req, res) => {
     }
 
     // Prepare content query containing context and actual dialog
-    let systemPrompt = `You are "IQMentor", an elite elite startup mentor and business incubator director at LaunchIQ. Your style is highly insightful, practical, concise, encouraging yet direct.
+    let systemPrompt = `You are "IQMentor", an elite startup mentor and business incubator director at LaunchIQ. Your style is highly insightful, practical, concise, encouraging yet direct.
+    
+    CRITICAL RULE: You are specialized strictly in business strategy, startup advice, and entrepreneurship. If the user asks about topics completely unrelated to business, marketing, finance, tech stack choices, validation, or launching a startup (such as general knowledge, cooking recipes, personal chat, sports, math homework, etc.), you must politely decline to answer, explaining that you are an AI startup advisor and can only help with business-related topics.
     
     You have deep knowledge of business creation, fundraising, distribution, growth hacking, local marketing, regulatory barriers, and pricing structures.
     `;
 
     if (projectContext) {
-      systemPrompt += `\nYou are currently advising on a project named "${projectContext.name}" in the "${projectContext.industry}" industry, which is at the "${projectContext.stage}" stage. Current business idea: "${projectContext.idea}". Keep this context in mind as the business of reference!`;
+      systemPrompt += `\nYou are currently advising on the project "${projectContext.name}" (${projectContext.industry} industry) at the "${projectContext.stage}" stage. Current business idea/concept: "${projectContext.idea}". Make sure all advice is highly tailored to this specific business context!`;
     }
 
     // Format chat messages into Part structure
